@@ -27,7 +27,7 @@ import Icons from "views/Icons.js";
 var routes = [
   {
     path: "/dashboard",
-    name: "Dashboard",
+    name: "Lora 1",
     rtlName: "لوحة القيادة",
     icon: "tim-icons icon-chart-pie-36",
     component: <Dashboard />,
@@ -35,7 +35,7 @@ var routes = [
   },
   {
     path: "/icons",
-    name: "Icons",
+    name: "Lora 2",
     rtlName: "الرموز",
     icon: "tim-icons icon-atom",
     component: <Icons />,

@@ -15,11 +15,15 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useState } from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // react plugin used to create charts
 import { Line, Bar } from "react-chartjs-2";
+
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.module.css"
+import "react-datepicker/dist/react-datepicker-min.module.css"
 
 // reactstrap components
 import {
@@ -40,12 +44,26 @@ import {
   chartExample3,
   chartExample4,
 } from "variables/charts.js";
+import { onValue, ref } from "firebase/database";
+import { db } from "utils/firebase";
+
+
 
 function Dashboard(props) {
   const [bigChartData, setbigChartData] = React.useState("data1");
   const setBgChartData = (name) => {
     setbigChartData(name);
   };
+  //Retrive firebase data
+  const starCountRef = ref(db);
+  onValue(starCountRef, (snapshot) => {
+    const data = snapshot.val();
+    console.log(data);
+  });
+  // 
+  // Date Picker
+  const [startDate, setStartDate] = useState(new Date());
+
   return (
     <>
       <div className="content">
@@ -54,12 +72,18 @@ function Dashboard(props) {
             <Card className="card-chart">
               <CardHeader>
                 <Row>
-                  <Col className="text-left" sm="6">
+                  <Col className="text-left" sm="9">
                   <h5 className="card-category">Data rata-rata berdasarkan waktu</h5>
                     <CardTitle tag="h2">Suhu</CardTitle>
                   </Col>
-                  <Col sm="6">
-                    <ButtonGroup
+                  <Col className="text-right" sm="3">      
+                    <ReactDatePicker
+                    className="btn-simple card-category"
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
+                  />
+                  
+                    {/* <ButtonGroup
                       className="btn-group-toggle float-right"
                       data-toggle="buttons"
                     >
@@ -114,7 +138,7 @@ function Dashboard(props) {
                           <i className="tim-icons icon-tap-02" />
                         </span>
                       </Button>
-                    </ButtonGroup>
+                    </ButtonGroup> */}
                   </Col>
                 </Row>
               </CardHeader>
@@ -130,7 +154,7 @@ function Dashboard(props) {
           </Col>
         </Row>
         <Row>
-          <Col lg="4">
+          <Col xs="12">
             <Card className="card-chart">
               <CardHeader>
                 <h5 className="card-category">Data rata-rata berdasarkan waktu</h5>
@@ -145,26 +169,10 @@ function Dashboard(props) {
                 </div>
               </CardBody>
             </Card>
-          </Col>
-          <Col lg="4">
-            <Card className="card-chart">
-              <CardHeader>
-              <h5 className="card-category">Data rata-rata berdasarkan waktu</h5>
-                <CardTitle tag="h3">
-                  Kecepatan Angin
-                </CardTitle>
-              </CardHeader>
-              <CardBody>
-                <div className="chart-area">
-                  <Bar
-                    data={chartExample3.data}
-                    options={chartExample3.options}
-                  />
-                </div>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg="4">
+            </Col>
+        </Row>
+        <Row>
+          <Col xs="12">
             <Card className="card-chart">
               <CardHeader>
                 <h5 className="card-category">Data rata-rata berdasarkan waktu</h5>
@@ -177,6 +185,26 @@ function Dashboard(props) {
                   <Line
                     data={chartExample4.data}
                     options={chartExample4.options}
+                  />
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs="12">
+            <Card className="card-chart">
+              <CardHeader>
+              <h5 className="card-category">Data rata-rata berdasarkan waktu</h5>
+                <CardTitle tag="h3">
+                  Kecepatan Angin
+                </CardTitle>
+              </CardHeader>
+              <CardBody>
+                <div className="chart-area">
+                  <Bar
+                    data={chartExample3.data}
+                    options={chartExample3.options}
                   />
                 </div>
               </CardBody>
