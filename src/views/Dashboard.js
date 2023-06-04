@@ -16,8 +16,7 @@
 
 */
 import React, { useState } from "react";
-// nodejs library that concatenates classes
-import classNames from "classnames";
+
 // react plugin used to create charts
 import { Line, Bar } from "react-chartjs-2";
 
@@ -27,8 +26,6 @@ import "react-datepicker/dist/react-datepicker-min.module.css"
 
 // reactstrap components
 import {
-  Button,
-  ButtonGroup,
   Card,
   CardHeader,
   CardBody,
@@ -43,27 +40,330 @@ import {
   chartExample2,
   chartExample3,
   chartExample4,
+  chart1_2_options,
 } from "variables/charts.js";
 import { onValue, ref } from "firebase/database";
 import { db } from "utils/firebase";
 
+function retriveFirebaseData(date){
+  //Retrive firebase data
+  const starCountRef = ref(db, 'C1/' + date);
+  onValue(starCountRef, (snapshot) => {
+    if (snapshot.exists()){
+      const data = snapshot.val();
+      updateKelembabanChart(data);
+      updateKecepatanAnginChart(data);
+      updateCurahHujanChart(data)
+    }
+    else {
+      updateKelembabanChart(null)
+      updateKecepatanAnginChart(null);
+      updateCurahHujanChart(null)
+    }
+  });
+
+}
+
+function updateCurahHujanChart(data){
+  const dataCurahHujan = new Array(24).fill(0);
+
+  if(data !== null){
+    for(const key in data){
+      let curahHujan = 0.0;
+      let objLength = 0
+      for(const x in data[key]){
+        const dataPerMenit = parseFloat(data[key][x]['curah_hujan_menit_ini'])
+        if(typeof dataPerMenit !== 'undefined' && isNaN(dataPerMenit) === false && dataPerMenit !== 0){
+          curahHujan += dataPerMenit
+          objLength += 1
+          console.log(dataPerMenit)
+        }
+      }
+      dataCurahHujan[+key] = isNaN(curahHujan/objLength) ? 0 : curahHujan/objLength
+      console.log(dataCurahHujan)
+      console.log(`Curah Hujan rata2 : ${curahHujan/objLength}`)
+      console.log(objLength)
+    }
+  }
+
+  chartExample4 = {
+    data: (canvas) => {
+      let ctx = canvas.getContext("2d");
+  
+      let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+  
+      gradientStroke.addColorStop(1, "rgba(66,134,121,0.15)");
+      gradientStroke.addColorStop(0.4, "rgba(66,134,121,0.0)"); //green colors
+      gradientStroke.addColorStop(0, "rgba(66,134,121,0)"); //green colors
+  
+      return {
+        labels: [
+          "00",
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "06",
+          "07",
+          "08",
+          "09",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "19",
+          "20",
+          "21",
+          "22",
+          "23"
+        ],
+        datasets: [
+          {
+            label: "My First dataset",
+            fill: true,
+            backgroundColor: gradientStroke,
+            borderColor: "#00d6b4",
+            borderWidth: 2,
+            borderDash: [],
+            borderDashOffset: 0.0,
+            pointBackgroundColor: "#00d6b4",
+            pointBorderColor: "rgba(255,255,255,0)",
+            pointHoverBackgroundColor: "#00d6b4",
+            pointBorderWidth: 20,
+            pointHoverRadius: 4,
+            pointHoverBorderWidth: 15,
+            pointRadius: 4,
+            data: dataCurahHujan,
+          },
+        ],
+      };
+    },
+    options: {
+      maintainAspectRatio: false,
+      legend: {
+        display: false,
+      },
+  
+      tooltips: {
+        backgroundColor: "#f5f5f5",
+        titleFontColor: "#333",
+        bodyFontColor: "#666",
+        bodySpacing: 4,
+        xPadding: 12,
+        mode: "nearest",
+        intersect: 0,
+        position: "nearest",
+      },
+      responsive: true,
+      scales: {
+        yAxes: {
+          barPercentage: 1.6,
+          gridLines: {
+            drawBorder: false,
+            color: "rgba(29,140,248,0.0)",
+            zeroLineColor: "transparent",
+          },
+          ticks: {
+            suggestedMin: 50,
+            suggestedMax: 125,
+            padding: 20,
+            fontColor: "#9e9e9e",
+          },
+        },
+        xAxes: {
+          barPercentage: 1.6,
+          gridLines: {
+            drawBorder: false,
+            color: "rgba(0,242,195,0.1)",
+            zeroLineColor: "transparent",
+          },
+          ticks: {
+            padding: 20,
+            fontColor: "#9e9e9e",
+          },
+        },
+      },
+    },
+  };
+}
+
+function updateKecepatanAnginChart(data){
+  const dataKecepatanAngin = new Array(24).fill(0);
+
+  if(data !== null){
+    for(const key in data){
+      let kecAngin = 0.0;
+      let objLength = 0
+      for(const x in data[key]){
+        const dataPerMenit = parseFloat(data[key][x]['kecepatan_angin'])
+        if(typeof dataPerMenit !== 'undefined' && isNaN(dataPerMenit) === false && dataPerMenit !== 0){
+          kecAngin += dataPerMenit
+          objLength += 1
+          console.log(dataPerMenit)
+        }
+      }
+      dataKecepatanAngin[+key] = isNaN(kecAngin/objLength) ? 0 : kecAngin/objLength
+      console.log(dataKecepatanAngin)
+      console.log(`Kecepatan angin rata2 : ${kecAngin/objLength}`)
+      console.log(objLength)
+    }
+  }
+
+  chartExample1 = {
+    data1: (canvas) => {
+      let ctx = canvas.getContext("2d");
+  
+      let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+  
+      gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
+      gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
+      gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); //blue colors
+  
+      return {
+        labels: [
+          "00",
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "06",
+          "07",
+          "08",
+          "09",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "19",
+          "20",
+          "21",
+          "22",
+          "23"
+        ],
+        datasets: [
+          {
+            label: "Suhu dalam Celcius",
+            fill: true,
+            backgroundColor: gradientStroke,
+            borderColor: "#1f8ef1",
+            borderWidth: 2,
+            borderDash: [],
+            borderDashOffset: 0.0,
+            pointBackgroundColor: "#1f8ef1",
+            pointBorderColor: "rgba(255,255,255,0)",
+            pointHoverBackgroundColor: "#1f8ef1",
+            pointBorderWidth: 20,
+            pointHoverRadius: 4,
+            pointHoverBorderWidth: 15,
+            pointRadius: 4,
+            data: dataKecepatanAngin,
+          },
+        ],
+      };
+    },
+    options: chart1_2_options,
+  };
+}
+
+function updateKelembabanChart(data){
+  const dataKelembaban = new Array(24).fill(0);
+
+  if(data !== null){
+    for(const key in data){
+      let kelembaban = 0.0;
+      let objLength = 0
+      for(const x in data[key]){
+        const dataPerMenit = parseFloat(data[key][x]['kelembaban'])
+        if(typeof dataPerMenit !== 'undefined' && (isNaN(dataPerMenit)) === false && dataPerMenit !== 0){
+          kelembaban += dataPerMenit
+          objLength += 1
+        }
+      }
+      dataKelembaban[+key] = isNaN(kelembaban/objLength) ? 0 : kelembaban/objLength
+      console.log(`array kelembaban : ${dataKelembaban}`)
+      console.log(`Kelembaban rata2 : ${kelembaban/objLength}`)
+    }
+  }
+
+  chartExample2 = {
+    data: (canvas) => {
+      let ctx = canvas.getContext("2d");
+  
+      let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+  
+      gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
+      gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
+      gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); //blue colors
+  
+      return {
+        labels: [
+          "00",
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "06",
+          "07",
+          "08",
+          "09",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "19",
+          "20",
+          "21",
+          "22",
+          "23"
+        ],
+        datasets: [
+          {
+            label: "Data",
+            fill: true,
+            backgroundColor: gradientStroke,
+            borderColor: "#1f8ef1",
+            borderWidth: 2,
+            borderDash: [],
+            borderDashOffset: 0.0,
+            pointBackgroundColor: "#1f8ef1",
+            pointBorderColor: "rgba(255,255,255,0)",
+            pointHoverBackgroundColor: "#1f8ef1",
+            pointBorderWidth: 20,
+            pointHoverRadius: 4,
+            pointHoverBorderWidth: 15,
+            pointRadius: 4,
+            data: dataKelembaban,
+          },
+        ],
+      };
+    },
+    options: chart1_2_options,
+  };
+  
+}
+
 
 
 function Dashboard(props) {
-  const [bigChartData, setbigChartData] = React.useState("data1");
-  const setBgChartData = (name) => {
-    setbigChartData(name);
-  };
-  //Retrive firebase data
-  const starCountRef = ref(db);
-  onValue(starCountRef, (snapshot) => {
-    const data = snapshot.val();
-    console.log(data);
-  });
-  // 
+  const [bigChartData] = React.useState("data1");
+  
   // Date Picker
   const [startDate, setStartDate] = useState(new Date());
-
   return (
     <>
       <div className="content">
@@ -74,71 +374,25 @@ function Dashboard(props) {
                 <Row>
                   <Col className="text-left" sm="9">
                   <h5 className="card-category">Data rata-rata berdasarkan waktu</h5>
-                    <CardTitle tag="h2">Suhu</CardTitle>
+                    <CardTitle tag="h2">Kecepatan Angin</CardTitle>
                   </Col>
                   <Col className="text-right" sm="3">      
                     <ReactDatePicker
                     className="btn-simple card-category"
                     selected={startDate}
-                    onChange={(date) => setStartDate(date)}
+                    dateFormat="MM:dd:yyyy"
+                    onChange={(date) => {
+                      const fullMonth = date.getMonth()+1 < 10 ? '0'+ (date.getMonth()+1) : date.getMonth()+1
+                      const fullDate = date.getDate() < 10 ? '0'+ date.getDate() : date.getDate()
+                      let formattedDate = `${
+                        fullMonth
+                      }:${fullDate}:${date.getFullYear()}`;
+                      setStartDate(date)
+                      const data = {date: formattedDate}
+                      retriveFirebaseData(data.date)
+                      console.log(data.date)
+                    }}
                   />
-                  
-                    {/* <ButtonGroup
-                      className="btn-group-toggle float-right"
-                      data-toggle="buttons"
-                    >
-                      <Button
-                        tag="label"
-                        className={classNames("btn-simple", {
-                          active: bigChartData === "data1",
-                        })}
-                        color="info"
-                        id="0"
-                        size="sm"
-                        onClick={() => setBgChartData("data1")}
-                      >
-                        <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                          Accounts
-                        </span>
-                        <span className="d-block d-sm-none">
-                          <i className="tim-icons icon-single-02" />
-                        </span>
-                      </Button>
-                      <Button
-                        color="info"
-                        id="1"
-                        size="sm"
-                        tag="label"
-                        className={classNames("btn-simple", {
-                          active: bigChartData === "data2",
-                        })}
-                        onClick={() => setBgChartData("data2")}
-                      >
-                        <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                          Purchases
-                        </span>
-                        <span className="d-block d-sm-none">
-                          <i className="tim-icons icon-gift-2" />
-                        </span>
-                      </Button>
-                      <Button
-                        color="info"
-                        id="2"
-                        size="sm"
-                        tag="label"
-                        className={classNames("btn-simple", {
-                          active: bigChartData === "data3",
-                        })}
-                        onClick={() => setBgChartData("data3")}
-                      >
-                        <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                          Sessions
-                        </span>
-                        <span className="d-block d-sm-none">
-                          <i className="tim-icons icon-tap-02" />
-                        </span>
-                      </Button>
-                    </ButtonGroup> */}
                   </Col>
                 </Row>
               </CardHeader>
