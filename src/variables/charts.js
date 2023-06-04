@@ -70,7 +70,7 @@ let chart1_2_options = {
 // // // used inside src/views/Dashboard.js
 // #########################################
 let chartExample1 = {
-  data1: (canvas) => {
+  data: (canvas) => {
     let ctx = canvas.getContext("2d");
 
     let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
@@ -107,7 +107,7 @@ let chartExample1 = {
       ],
       datasets: [
         {
-          label: "Suhu dalam Celcius",
+          label: "Kecepatan angin",
           fill: true,
           backgroundColor: gradientStroke,
           borderColor: "#1f8ef1",
@@ -121,7 +121,7 @@ let chartExample1 = {
           pointHoverRadius: 4,
           pointHoverBorderWidth: 15,
           pointRadius: 4,
-          data: [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100],
+          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0, 0 ],
         },
       ],
     };
@@ -172,7 +172,7 @@ let chartExample2 = {
       ],
       datasets: [
         {
-          label: "Data",
+          label: "Kelembaban",
           fill: true,
           backgroundColor: gradientStroke,
           borderColor: "#1f8ef1",
@@ -186,7 +186,7 @@ let chartExample2 = {
           pointHoverRadius: 4,
           pointHoverBorderWidth: 15,
           pointRadius: 4,
-          data: [0, 27, 21, 60],
+          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0, 0 ],
         },
       ],
     };
@@ -235,7 +235,7 @@ let chartExample3 = {
       ],
       datasets: [
         {
-          label: "Countries",
+          label: "Suhu dalam celcius",
           fill: true,
           backgroundColor: gradientStroke,
           hoverBackgroundColor: gradientStroke,
@@ -243,7 +243,7 @@ let chartExample3 = {
           borderWidth: 2,
           borderDash: [],
           borderDashOffset: 0.0,
-          data: [53, 20, 10, 80, 17.5, 45],
+          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0, 0 ],
         },
       ],
     };
@@ -334,7 +334,7 @@ const chartExample4 = {
       ],
       datasets: [
         {
-          label: "My First dataset",
+          label: "Curah hujan",
           fill: true,
           backgroundColor: gradientStroke,
           borderColor: "#00d6b4",
@@ -348,7 +348,7 @@ const chartExample4 = {
           pointHoverRadius: 4,
           pointHoverBorderWidth: 15,
           pointRadius: 4,
-          data: [90, 27, 60, 12, 80],
+          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0 ,0, 0 ],
         },
       ],
     };
