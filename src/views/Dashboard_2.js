@@ -48,7 +48,7 @@ import { onValue, ref } from "firebase/database";
 import { db } from "utils/firebase";
 
 
-function Dashboard(props) {
+function Dashboard_2(props) {
 
   const [chartSuhu, setChartSuhu] = useState(() => chartExample3.data(document.createElement('canvas')));
   const [chartKelembaban, setChartKelembaban] = useState(() => chartExample2.data(document.createElement('canvas')));
@@ -188,7 +188,7 @@ function Dashboard(props) {
 
   const retriveFirebaseData = (date) =>{
     //Retrive firebase data
-    const starCountRef = ref(db, 'C1/' + date);
+    const starCountRef = ref(db, 'C2/' + date);
     onValue(starCountRef, (snapshot) => {
       if (snapshot.exists()){
         const data = snapshot.val();
@@ -357,4 +357,4 @@ function Dashboard(props) {
   );
 }
 
-export default Dashboard;
+export default Dashboard_2;
